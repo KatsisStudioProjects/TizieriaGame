@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
-using Tizieria.Game;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Tizieria.SO;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Tizieria.Manager
@@ -9,9 +13,12 @@ namespace Tizieria.Manager
         public static MusicManager Instance { private set; get; }
 
         [SerializeField]
+        private MusicInfo _info;
+
+        [SerializeField]
         private GameObject _notePrefab;
 
-        private Queue<NoteData> _unspawnedNotes;
+        private Queue<PreloadedNotedata> _unspawnedNotes;
         private readonly List<NoteData> _spawnedNotes = new();
 
         private float _currFallDuration = 1f;
@@ -19,6 +26,12 @@ namespace Tizieria.Manager
         private void Awake()
         {
             Instance = this;
+
+            _unspawnedNotes
+                = new Queue<PreloadedNotedata>(_info.Notes
+                    .OrderBy(note => note.Index)
+                    .Select(note => new PreloadedNotedata() { Lane = note.Line, Time = note.Index * _info.BPM })
+                );
         }
 
         private void Update()
@@ -26,7 +39,7 @@ namespace Tizieria.Manager
             
         }
 
-        private void SpawnNote(int lineId, double currentTime)
+        private void SpawnNote(int lineId, float currentTime)
         {
             var line = ResourceManager.Instance.Lines[lineId];
 
@@ -41,7 +54,7 @@ namespace Tizieria.Manager
             });
         }
 
-        private void TrySpawningNotes(double currentTime)
+        private void TrySpawningNotes(float currentTime)
         {
             if (_unspawnedNotes.Count == 0) return;
 
@@ -60,6 +73,12 @@ namespace Tizieria.Manager
     {
         public Transform RT;
         public int Lane;
-        public double Time;
+        public float Time;
+    }
+
+    public class PreloadedNotedata
+    {
+        public float Time;
+        public int Lane;
     }
 }

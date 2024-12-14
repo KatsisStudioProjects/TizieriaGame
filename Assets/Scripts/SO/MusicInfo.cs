@@ -8,9 +8,10 @@ namespace Tizieria.SO
         public string Name;
         public int BPM;
 
-        public NoteData[] _notes;
+        public NoteData[] Notes;
     }
 
+    [System.Serializable]
     public class NoteData
     {
         public int Line;
