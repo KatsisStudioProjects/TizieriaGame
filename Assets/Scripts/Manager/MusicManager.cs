@@ -24,8 +24,6 @@ namespace Tizieria.Manager
 
         private float _currFallDuration = 1f;
 
-        private float _currentTime;
-
         private void Awake()
         {
             Instance = this;
@@ -39,20 +37,18 @@ namespace Tizieria.Manager
 
         private void Update()
         {
-            _currentTime += Time.deltaTime;
-
-            TrySpawningNotes(_currentTime);
+            TrySpawningNotes(_source.time);
 
             foreach (var note in _spawnedNotes)
             {
-                note.Time += Time.deltaTime * 1f / note.FallDuration;
+                var time = _source.time - note.RefTime;
 
                 if (note.GameObject != null)
                 {
-                    note.Transform.position = Vector2.LerpUnclamped(note.Lane.SpawnPos, note.Lane.Container.position, note.Time);
+                    note.Transform.position = Vector2.LerpUnclamped(note.Lane.SpawnPos, note.Lane.Container.position, time);
                 }
 
-                if (note.Time > 1f)
+                if (time > 1f)
                 {
                     if (note.GameObject != null)
                     {
@@ -66,7 +62,7 @@ namespace Tizieria.Manager
                         HitNote(note.Line, note.HitArea.GetInstanceID());
                     }*/
 
-                    if (note.Time > 1f + .1f)
+                    if (time > 1f + .1f)
                     {
                         /*note.HitArea.ShowHitInfo(_info.MissInfo);
                         note.PendingRemoval = true;*/
@@ -75,7 +71,7 @@ namespace Tizieria.Manager
             }
         }
 
-        private void SpawnNote(int lineId)
+        private void SpawnNote(int lineId, float currTime)
         {
             var line = ResourceManager.Instance.Lines[lineId];
 
@@ -86,7 +82,7 @@ namespace Tizieria.Manager
             {
                 GameObject = note,
                 Transform = note.transform,
-                Time = 0f,
+                RefTime = currTime,
                 Lane = line,
 
                 FallDuration = 1f
@@ -98,12 +94,11 @@ namespace Tizieria.Manager
             if (_unspawnedNotes.Count == 0) return;
 
             var closestUnspawnedNote = _unspawnedNotes.Peek();
-                
-            Debug.Log(closestUnspawnedNote.Time);
+
             if (currentTime > closestUnspawnedNote.Time - _currFallDuration)
             {
                 _unspawnedNotes.Dequeue();
-                SpawnNote(closestUnspawnedNote.Lane);//, currentTime - (closestUnspawnedNote.Time - _currFallDuration));
+                SpawnNote(closestUnspawnedNote.Lane, closestUnspawnedNote.Time - _currFallDuration);
                 TrySpawningNotes(currentTime);
             }
         }
@@ -114,7 +109,7 @@ namespace Tizieria.Manager
         public GameObject GameObject;
         public Transform Transform;
         public Line Lane;
-        public float Time;
+        public float RefTime;
 
         public float FallDuration;
     }
