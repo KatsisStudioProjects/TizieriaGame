@@ -39,7 +39,7 @@ namespace Tizieria.Manager
         private void Start()
         {
             _unspawnedNotes = new Queue<PreloadedNotedata>(
-                Enumerable.Range(5, 50)
+                Enumerable.Range(5, Mathf.FloorToInt(_source.clip.length - 1f))
                 .Select(x => new PreloadedNotedata()
                 {
                     Lane = Random.Range(0, ResourceManager.Instance.Lines.Length),
