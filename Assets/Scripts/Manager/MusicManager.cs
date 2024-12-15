@@ -28,11 +28,19 @@ namespace Tizieria.Manager
         {
             Instance = this;
 
-            _unspawnedNotes
+            /*_unspawnedNotes
                 = new Queue<PreloadedNotedata>(_info.Notes
                     .OrderBy(note => note.Index)
                     .Select(note => new PreloadedNotedata() { Lane = note.Line, Time = (60f / _info.BPM) * note.Index })
-                );
+                );*/
+        }
+
+        private void Start()
+        {
+            _unspawnedNotes = new Queue<PreloadedNotedata>(
+                Enumerable.Range(5, 50)
+                .Select(x => new PreloadedNotedata() { Lane = Random.Range(0, ResourceManager.Instance.Lines.Length), Time = (60f / _info.BPM) * x })
+            );
         }
 
         private void Update()
