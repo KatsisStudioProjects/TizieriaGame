@@ -14,3 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Sample Song
   BPM: 90
+  Notes:
+  - Line: 0
+    Index: 1
+  - Line: 0
+    Index: 2
+  - Line: 0
+    Index: 3
+  - Line: 0
+    Index: 4
+  - Line: 1
+    Index: 4
+  - Line: 1
+    Index: 5
