@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1eb59cde4e4158c4d82a8e1a709d8dfe
+guid: 77cc3c324cd7f9f43aa61c29775d742b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -269404117444326041
-    second: Cumflation_01_0
+      213: 3622792381989719942
+    second: Neutral_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Cumflation_01_0
+      name: Neutral_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 76d04bee162e24cf0800000000000000
-      internalID: -269404117444326041
+      spriteID: 68f0d7f1a7eb64230800000000000000
+      internalID: 3622792381989719942
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Cumflation_01_0: -269404117444326041
+      Neutral_0: 3622792381989719942
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
