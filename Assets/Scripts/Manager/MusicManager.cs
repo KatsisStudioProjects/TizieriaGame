@@ -3,6 +3,7 @@ using System.Linq;
 using Tizieria.Game;
 using Tizieria.SO;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Tizieria.Manager
 {
@@ -86,6 +87,9 @@ namespace Tizieria.Manager
             var note = Instantiate(_notePrefab, line.Container);
             note.transform.position = line.SpawnPos;
 
+            var id = Random.Range(1, 3);
+            note.GetComponent<Image>().color = id == 1 ? Color.red : Color.blue;
+
             _spawnedNotes.Add(new()
             {
                 GameObject = note,
@@ -93,7 +97,9 @@ namespace Tizieria.Manager
                 RefTime = currTime,
                 Lane = line,
 
-                FallDuration = 1f
+                FallDuration = 1f,
+
+                NoteRoad = id
             });
         }
 
@@ -120,6 +126,8 @@ namespace Tizieria.Manager
         public float RefTime;
 
         public float FallDuration;
+
+        public int NoteRoad;
     }
 
     public class PreloadedNotedata
