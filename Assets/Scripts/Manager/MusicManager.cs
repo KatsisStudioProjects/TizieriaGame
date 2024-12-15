@@ -40,7 +40,12 @@ namespace Tizieria.Manager
         {
             _unspawnedNotes = new Queue<PreloadedNotedata>(
                 Enumerable.Range(5, 50)
-                .Select(x => new PreloadedNotedata() { Lane = Random.Range(0, ResourceManager.Instance.Lines.Length), Time = (60f / _info.BPM) * x })
+                .Select(x => new PreloadedNotedata()
+                {
+                    Lane = Random.Range(0, ResourceManager.Instance.Lines.Length),
+                    Time = (60f / _info.BPM) * x,
+                    Id = Random.Range(0, 2)
+                })
             );
         }
 
@@ -80,15 +85,13 @@ namespace Tizieria.Manager
             }
         }
 
-        private void SpawnNote(int lineId, float currTime)
+        private void SpawnNote(PreloadedNotedata data, float currTime)
         {
-            var line = ResourceManager.Instance.Lines[lineId];
+            var line = ResourceManager.Instance.Lines[data.Lane];
 
             var note = Instantiate(_notePrefab, line.Container);
             note.transform.position = line.SpawnPos;
-
-            var id = Random.Range(1, 3);
-            note.GetComponent<Image>().color = id == 1 ? Color.red : Color.blue;
+            note.GetComponent<Image>().color = data.Id == 0 ? Color.red : Color.blue;
 
             _spawnedNotes.Add(new()
             {
@@ -99,7 +102,7 @@ namespace Tizieria.Manager
 
                 FallDuration = 1f,
 
-                NoteRoad = id
+                NoteRoad = data.Id
             });
         }
 
@@ -112,7 +115,7 @@ namespace Tizieria.Manager
             if (currentTime > closestUnspawnedNote.Time - _currFallDuration)
             {
                 _unspawnedNotes.Dequeue();
-                SpawnNote(closestUnspawnedNote.Lane, closestUnspawnedNote.Time - _currFallDuration);
+                SpawnNote(closestUnspawnedNote, closestUnspawnedNote.Time - _currFallDuration);
                 TrySpawningNotes(currentTime);
             }
         }
@@ -134,5 +137,6 @@ namespace Tizieria.Manager
     {
         public float Time;
         public int Lane;
+        public int Id;
     }
 }
