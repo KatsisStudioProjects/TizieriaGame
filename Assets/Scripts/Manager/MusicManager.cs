@@ -16,9 +16,6 @@ namespace Tizieria.Manager
         [SerializeField]
         private GameObject _notePrefab;
 
-        [SerializeField]
-        private AudioSource _source;
-
         private Queue<PreloadedNotedata> _unspawnedNotes;
         private readonly List<NoteData> _spawnedNotes = new();
 
@@ -40,7 +37,7 @@ namespace Tizieria.Manager
         private void Start()
         {
             _unspawnedNotes = new Queue<PreloadedNotedata>(
-                Enumerable.Range(5, Mathf.FloorToInt(_source.clip.length - 1f))
+                Enumerable.Range(5, 50)
                 .Select(x => new PreloadedNotedata()
                 {
                     Lane = Random.Range(0, ResourceManager.Instance.Lines.Length),
@@ -62,15 +59,15 @@ namespace Tizieria.Manager
             };
         }
 
-        private void Update()
+        private void LateUpdate()
         {
-            TrySpawningNotes(_source.time);
+            TrySpawningNotes(TimeManager.Instance.Time);
 
             for (int i = _spawnedNotes.Count - 1; i >= 0; i--)
             {
                 var note = _spawnedNotes[i];
 
-                var time = _source.time - note.RefTime;
+                var time = TimeManager.Instance.Time - note.RefTime;
 
                 if (note.GameObject != null)
                 {
@@ -100,7 +97,7 @@ namespace Tizieria.Manager
 
         private void OnGUI()
         {
-            GUI.TextArea(new Rect(20, 20, 40, 40), string.Join("\n", _progress.Select(x => $"{x.Value} / {x.Max}")));
+            GUI.TextArea(new Rect(20, 20, 50, 40), string.Join("\n", _progress.Select(x => $"{x.Value} / {x.Max}")));
         }
 
         public void TryClickLine(int laneId)

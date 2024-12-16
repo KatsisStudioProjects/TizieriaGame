@@ -26,11 +26,11 @@ namespace Tizieria.Manager
             if (line1 == line2) _cgDisplay.sprite = _neutralSprite;
             else if (line1 > line2)
             {
-                _cgDisplay.sprite = _line2Sprites[Mathf.FloorToInt((line1 - line2) * (_line2Sprites.Length))];
+                _cgDisplay.sprite = _line2Sprites[Mathf.Clamp(Mathf.FloorToInt((line1 - line2) * (_line2Sprites.Length + 1)), 0, _line2Sprites.Length - 1)];
             }
             else
             {
-                _cgDisplay.sprite = _line1Sprites[Mathf.FloorToInt((line2 - line1) * (_line1Sprites.Length - 1))];
+                _cgDisplay.sprite = _line1Sprites[Mathf.Clamp(Mathf.FloorToInt((line2 - line1) * (_line1Sprites.Length + 1)), 0, _line1Sprites.Length - 1)];
             }
         }
     }
