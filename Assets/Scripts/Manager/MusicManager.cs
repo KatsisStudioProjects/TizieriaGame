@@ -116,11 +116,23 @@ namespace Tizieria.Manager
             var lane = ResourceManager.Instance.Lines[laneId];
             var dist = Mathf.Abs(lane.Container.position.y - note.Transform.position.y);
 
-            _progress[note.NoteRoad].Value++;
+            var diff = lane.SpawnPos.y - lane.Container.position.y;
+            if (dist < 30f)
+            {
+                _progress[note.NoteRoad].Value++;
+            }
+            else if (dist < diff / 10f)
+            {
+                // Note will just be destroyed
+            }
+            else
+            {
+                return;
+            }
+
 
             Destroy(note.GameObject);
             _spawnedNotes.RemoveAll(x => x.LaneId == note.LaneId && x.RefTime == note.RefTime);
-            Debug.Log(dist);
         }
 
         private void SpawnNote(PreloadedNotedata data, float currTime)
