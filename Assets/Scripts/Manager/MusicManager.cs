@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Tizieria.Game;
 using Tizieria.SO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -120,6 +119,8 @@ namespace Tizieria.Manager
             if (dist < 30f)
             {
                 _progress[note.NoteRoad].Value++;
+
+                CGManager.Instance.UpdateSprite(_progress[0].Value01, _progress[1].Value01);
             }
             else if (dist < diff / 10f)
             {
@@ -129,7 +130,6 @@ namespace Tizieria.Manager
             {
                 return;
             }
-
 
             Destroy(note.GameObject);
             _spawnedNotes.RemoveAll(x => x.LaneId == note.LaneId && x.RefTime == note.RefTime);
@@ -175,6 +175,8 @@ namespace Tizieria.Manager
     {
         public int Value;
         public int Max;
+
+        public float Value01 => Value / (float)Max;
     }
 
     public class NoteData
