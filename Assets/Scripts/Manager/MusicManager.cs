@@ -25,6 +25,8 @@ namespace Tizieria.Manager
 
         private float _currFallDuration = 1f;
 
+        private Progress[] _progress;
+
         private void Awake()
         {
             Instance = this;
@@ -47,6 +49,18 @@ namespace Tizieria.Manager
                     Id = Random.Range(0, 2)
                 })
             );
+
+            _progress = new Progress[2];
+            _progress[0] = new Progress()
+            {
+                Value = 0,
+                Max = _unspawnedNotes.Count(x => x.Id == 0)
+            };
+            _progress[1] = new Progress()
+            {
+                Value = 0,
+                Max = _unspawnedNotes.Count(x => x.Id == 1)
+            };
         }
 
         private void Update()
@@ -85,6 +99,11 @@ namespace Tizieria.Manager
             }
         }
 
+        private void OnGUI()
+        {
+            GUI.TextArea(new Rect(20, 20, 40, 40), string.Join("\n", _progress.Select(x => $"{x.Value} / {x.Max}")));
+        }
+
         private void SpawnNote(PreloadedNotedata data, float currTime)
         {
             var line = ResourceManager.Instance.Lines[data.Lane];
@@ -119,6 +138,12 @@ namespace Tizieria.Manager
                 TrySpawningNotes(currentTime);
             }
         }
+    }
+
+    public class Progress
+    {
+        public int Value;
+        public int Max;
     }
 
     public class NoteData
