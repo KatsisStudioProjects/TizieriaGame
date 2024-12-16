@@ -67,22 +67,22 @@ namespace Tizieria.Manager
         {
             TrySpawningNotes(_source.time);
 
-            foreach (var note in _spawnedNotes)
+            for (int i = _spawnedNotes.Count - 1; i >= 0; i--)
             {
+                var note = _spawnedNotes[i];
+
                 var time = _source.time - note.RefTime;
 
                 if (note.GameObject != null)
                 {
-                    note.Transform.position = Vector2.LerpUnclamped(note.Lane.SpawnPos, note.Lane.Container.position, time);
+                    var lane = ResourceManager.Instance.Lines[note.LaneId];
+                    note.Transform.position = Vector2.LerpUnclamped(lane.SpawnPos, lane.Container.position, time);
                 }
 
-                if (time > 1f)
+                if (time > 1f + .1f)
                 {
-                    if (note.GameObject != null)
-                    {
-                        Destroy(note.GameObject);
-                        note.GameObject = null;
-                    }
+                    Destroy(note.GameObject);
+                    _spawnedNotes.RemoveAt(i);
 
                     /*if (!note.PendingRemoval && note.HitArea.IsAIController && note.CurrentTime > note.AIHitTiming)
                     {
@@ -104,6 +104,25 @@ namespace Tizieria.Manager
             GUI.TextArea(new Rect(20, 20, 40, 40), string.Join("\n", _progress.Select(x => $"{x.Value} / {x.Max}")));
         }
 
+        public void TryClickLine(int laneId)
+        {
+            var note = _spawnedNotes.FirstOrDefault(x => x.LaneId == laneId);
+
+            if (note == null)
+            {
+                return;
+            }
+
+            var lane = ResourceManager.Instance.Lines[laneId];
+            var dist = Mathf.Abs(lane.Container.position.y - note.Transform.position.y);
+
+            _progress[note.NoteRoad].Value++;
+
+            Destroy(note.GameObject);
+            _spawnedNotes.RemoveAll(x => x.LaneId == note.LaneId && x.RefTime == note.RefTime);
+            Debug.Log(dist);
+        }
+
         private void SpawnNote(PreloadedNotedata data, float currTime)
         {
             var line = ResourceManager.Instance.Lines[data.Lane];
@@ -117,7 +136,7 @@ namespace Tizieria.Manager
                 GameObject = note,
                 Transform = note.transform,
                 RefTime = currTime,
-                Lane = line,
+                LaneId = data.Lane,
 
                 FallDuration = 1f,
 
@@ -150,7 +169,7 @@ namespace Tizieria.Manager
     {
         public GameObject GameObject;
         public Transform Transform;
-        public Line Lane;
+        public int LaneId;
         public float RefTime;
 
         public float FallDuration;
