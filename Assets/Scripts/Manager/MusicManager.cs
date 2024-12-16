@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Tizieria.SO;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,8 +19,6 @@ namespace Tizieria.Manager
 
         private Queue<PreloadedNotedata> _unspawnedNotes;
         private readonly List<NoteData> _spawnedNotes = new();
-
-        private float _currFallDuration = 1f;
 
         private Progress[] _progress;
 
@@ -67,7 +66,7 @@ namespace Tizieria.Manager
             {
                 var note = _spawnedNotes[i];
 
-                var time = TimeManager.Instance.Time - note.RefTime;
+                var time = (TimeManager.Instance.Time - note.RefTime) / note.FallDuration;
 
                 if (note.GameObject != null)
                 {
@@ -132,7 +131,7 @@ namespace Tizieria.Manager
             _spawnedNotes.RemoveAll(x => x.LaneId == note.LaneId && x.RefTime == note.RefTime);
         }
 
-        private void SpawnNote(PreloadedNotedata data, float currTime)
+        private void SpawnNote(PreloadedNotedata data, float currTime, float fallDuration)
         {
             var line = ResourceManager.Instance.Lines[data.Lane];
 
@@ -147,7 +146,7 @@ namespace Tizieria.Manager
                 RefTime = currTime,
                 LaneId = data.Lane,
 
-                FallDuration = 1f,
+                FallDuration = fallDuration,
 
                 NoteRoad = data.Id
             });
@@ -159,10 +158,11 @@ namespace Tizieria.Manager
 
             var closestUnspawnedNote = _unspawnedNotes.Peek();
 
-            if (currentTime > closestUnspawnedNote.Time - _currFallDuration)
+            var fallDuration = 1.25f - _progress[closestUnspawnedNote.Id].Value01;
+            if (currentTime > closestUnspawnedNote.Time - fallDuration)
             {
                 _unspawnedNotes.Dequeue();
-                SpawnNote(closestUnspawnedNote, closestUnspawnedNote.Time - _currFallDuration);
+                SpawnNote(closestUnspawnedNote, closestUnspawnedNote.Time - fallDuration, fallDuration);
                 TrySpawningNotes(currentTime);
             }
         }
