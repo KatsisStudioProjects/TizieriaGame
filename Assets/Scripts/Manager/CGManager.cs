@@ -36,7 +36,7 @@ namespace Tizieria.Manager
             {
                 var index = Mathf.FloorToInt((line2 - line1) * (_line1Sprites.Length + 2)) - 1;
                 if (index == -1) _cgDisplay.sprite = _neutralSprite;
-                _cgDisplay.sprite = _line1Sprites[Mathf.Clamp(index, 0, _line1Sprites.Length - 1)];
+                else _cgDisplay.sprite = _line1Sprites[Mathf.Clamp(index, 0, _line1Sprites.Length - 1)];
             }
         }
     }

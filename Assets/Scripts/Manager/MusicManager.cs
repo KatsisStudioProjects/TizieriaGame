@@ -143,7 +143,7 @@ namespace Tizieria.Manager
             {
                 // Sample note, we just destroy it
             }
-            else if (dist < 50f) // If we are under 50px of distance, the note is succesfully hit
+            else if (dist < diff / 5f) // If we are under 50px of distance, the note is succesfully hit
             {
                 _progress[note.ColorId].Value++;
 
