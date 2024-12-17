@@ -26,14 +26,17 @@ namespace Tizieria.Manager
 
         public void UpdateSprite(float line1, float line2)
         {
-            if (line1 == line2) _cgDisplay.sprite = _neutralSprite;
-            else if (line1 > line2)
+            if (line1 > line2)
             {
-                _cgDisplay.sprite = _line2Sprites[Mathf.Clamp(Mathf.FloorToInt((line1 - line2) * (_line2Sprites.Length + 1)), 0, _line2Sprites.Length - 1)];
+                var index = Mathf.FloorToInt((line1 - line2) * (_line2Sprites.Length + 2)) - 1;
+                if (index == -1) _cgDisplay.sprite = _neutralSprite;
+                else _cgDisplay.sprite = _line2Sprites[Mathf.Clamp(index, 0, _line2Sprites.Length - 1)];
             }
             else
             {
-                _cgDisplay.sprite = _line1Sprites[Mathf.Clamp(Mathf.FloorToInt((line2 - line1) * (_line1Sprites.Length + 1)), 0, _line1Sprites.Length - 1)];
+                var index = Mathf.FloorToInt((line2 - line1) * (_line1Sprites.Length + 2)) - 1;
+                if (index == -1) _cgDisplay.sprite = _neutralSprite;
+                _cgDisplay.sprite = _line1Sprites[Mathf.Clamp(index, 0, _line1Sprites.Length - 1)];
             }
         }
     }
