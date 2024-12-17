@@ -19,6 +19,9 @@ namespace Tizieria.Manager
         [SerializeField]
         private GameObject _notePrefab;
 
+        [SerializeField]
+        private GameObject _goodMarker;
+
         /// <summary>
         /// Notes that are left to be spawned
         /// </summary>
@@ -30,6 +33,8 @@ namespace Tizieria.Manager
         private readonly List<NoteData> _spawnedNotes = new();
 
         private Progress[] _progress;
+
+        private float _goodMarkerTimer = -1f;
 
         private void Awake()
         {
@@ -91,6 +96,18 @@ namespace Tizieria.Manager
             };
         }
 
+        private void Update()
+        {
+            if (_goodMarkerTimer > 0f)
+            {
+                _goodMarkerTimer -= Time.deltaTime;
+                if (_goodMarkerTimer <= 0f)
+                {
+                    _goodMarker.SetActive(false);
+                }
+            }
+        }
+
         private void LateUpdate() // We do things on LateUpdate to be sure TimeManager update time stuffs beforehand
         {
             // We see if we can spawn a new note
@@ -145,12 +162,16 @@ namespace Tizieria.Manager
             }
             else if (dist < diff / 5f) // If we are under 50px of distance, the note is succesfully hit
             {
+                _goodMarkerTimer = .5f;
+                _goodMarker.SetActive(true);
+
                 _progress[note.ColorId].Value++;
 
                 CGManager.Instance.UpdateSprite(_progress[0].Value01, _progress[1].Value01); // Update lewd CG
             }
             else if (dist < diff / 10f) // 10% of screen height
             {
+                _goodMarkerTimer = -1f;
                 // Note is too far to be hit but still close
                 // We do that to prevent the player spamming
             }
