@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Tizieria.SO;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Tizieria.Manager
 {
+    /// <summary>
+    /// Handle things related to music
+    /// </summary>
     public class MusicManager : MonoBehaviour
     {
         public static MusicManager Instance { private set; get; }
@@ -17,7 +19,14 @@ namespace Tizieria.Manager
         [SerializeField]
         private GameObject _notePrefab;
 
+        /// <summary>
+        /// Notes that are left to be spawned
+        /// </summary>
         private Queue<PreloadedNotedata> _unspawnedNotes;
+
+        /// <summary>
+        /// Notes that were spawned and still on the board
+        /// </summary>
         private readonly List<NoteData> _spawnedNotes = new();
 
         private Progress[] _progress;
@@ -25,145 +34,177 @@ namespace Tizieria.Manager
         private void Awake()
         {
             Instance = this;
-
-            /*_unspawnedNotes
-                = new Queue<PreloadedNotedata>(_info.Notes
-                    .OrderBy(note => note.Index)
-                    .Select(note => new PreloadedNotedata() { Lane = note.Line, Time = (60f / _info.BPM) * note.Index })
-                );*/
         }
 
         private void Start()
         {
+            // Create all notes that will need to be spawned
             _unspawnedNotes = new Queue<PreloadedNotedata>(
                 Enumerable.Range(5, 50)
-                .Select(x => new PreloadedNotedata()
+                .SelectMany(x =>
                 {
-                    Lane = Random.Range(0, ResourceManager.Instance.Lines.Length),
-                    Time = (60f / _info.BPM) * x,
-                    Id = Random.Range(0, 2)
+                    var laneId = Random.Range(0, ResourceManager.Instance.Lines.Length);
+                    var id = Random.Range(0, 2);
+
+                    // Note that the user will need to click
+                    List<PreloadedNotedata> dataList = new()
+                    {
+                        new PreloadedNotedata()
+                        {
+                            Lane = laneId,
+                            Time = (60f / _info.BPM) * x,
+                            ColorId = id,
+                            ReferenceValue = null
+                        }
+                    };
+
+                    // For all the other lines, we will spawn a "dummy" note
+                    for (int i = 0; i < ResourceManager.Instance.Lines.Length; i++)
+                    {
+                        if (i == laneId) continue;
+
+                        dataList.Add(new PreloadedNotedata()
+                        {
+                            Lane = i,
+                            Time = (60f / _info.BPM) * x,
+                            ColorId = -1,
+                            ReferenceValue = id
+                        });
+                    }
+
+                    return dataList;
                 })
             );
 
+            // The progress for the 2 lewd paths
+            // We calculate the max value based on how many notes we spawned
             _progress = new Progress[2];
             _progress[0] = new Progress()
             {
                 Value = 0,
-                Max = _unspawnedNotes.Count(x => x.Id == 0)
+                Max = _unspawnedNotes.Count(x => x.ColorId == 0)
             };
             _progress[1] = new Progress()
             {
                 Value = 0,
-                Max = _unspawnedNotes.Count(x => x.Id == 1)
+                Max = _unspawnedNotes.Count(x => x.ColorId == 1)
             };
         }
 
-        private void LateUpdate()
+        private void LateUpdate() // We do things on LateUpdate to be sure TimeManager update time stuffs beforehand
         {
+            // We see if we can spawn a new note
             TrySpawningNotes(TimeManager.Instance.Time);
 
+            // We make all notes go soawn
             for (int i = _spawnedNotes.Count - 1; i >= 0; i--)
             {
                 var note = _spawnedNotes[i];
 
-                var time = (TimeManager.Instance.Time - note.RefTime) / note.FallDuration;
+                var time = (TimeManager.Instance.Time - note.RefTime) / note.FallDuration; // Calculate note fall depending on time and fall speed
 
-                if (note.GameObject != null)
-                {
-                    var lane = ResourceManager.Instance.Lines[note.LaneId];
-                    note.Transform.position = Vector2.LerpUnclamped(lane.SpawnPos, lane.Container.position, time);
-                }
+                // Set position
+                var lane = ResourceManager.Instance.Lines[note.LaneId];
+                note.Transform.position = Vector2.LerpUnclamped(lane.SpawnPos, lane.Container.position, time);
 
-                if (time > 1f + .1f)
+                if (time > 1f + .1f) // Note if out of screen...
                 {
+                    // ... we delete it
                     Destroy(note.GameObject);
                     _spawnedNotes.RemoveAt(i);
-
-                    /*if (!note.PendingRemoval && note.HitArea.IsAIController && note.CurrentTime > note.AIHitTiming)
-                    {
-                        note.HitArea.OnKeyDownSpring(note.Line);
-                        HitNote(note.Line, note.HitArea.GetInstanceID());
-                    }*/
-
-                    if (time > 1f + .1f)
-                    {
-                        /*note.HitArea.ShowHitInfo(_info.MissInfo);
-                        note.PendingRemoval = true;*/
-                    }
                 }
             }
         }
 
         private void OnGUI()
         {
+            // Lewd path debug
             GUI.TextArea(new Rect(20, 20, 50, 40), string.Join("\n", _progress.Select(x => $"{x.Value} / {x.Max}")));
         }
 
+        /// <summary>
+        /// Called when a line is clicked, to check if we hit a note
+        /// </summary>
         public void TryClickLine(int laneId)
         {
+            // Get the closest note from the bottom of the screen on the corresponding line
             var note = _spawnedNotes.FirstOrDefault(x => x.LaneId == laneId);
 
             if (note == null)
             {
-                return;
+                return; // There is nothing on this line, so there is nothing to do
             }
 
             var lane = ResourceManager.Instance.Lines[laneId];
-            var dist = Mathf.Abs(lane.Container.position.y - note.Transform.position.y);
+            var dist = Mathf.Abs(lane.Container.position.y - note.Transform.position.y); // Distance between note and hit marker
 
-            var diff = lane.SpawnPos.y - lane.Container.position.y;
-            if (dist < 30f)
+            var diff = lane.SpawnPos.y - lane.Container.position.y; // Game area height
+            if (note.ColorId == -1)
             {
-                _progress[note.NoteRoad].Value++;
-
-                CGManager.Instance.UpdateSprite(_progress[0].Value01, _progress[1].Value01);
+                // Sample note, we just destroy it
             }
-            else if (dist < diff / 10f)
+            else if (dist < 50f) // If we are under 50px of distance, the note is succesfully hit
             {
-                // Note will just be destroyed
+                _progress[note.ColorId].Value++;
+
+                CGManager.Instance.UpdateSprite(_progress[0].Value01, _progress[1].Value01); // Update lewd CG
+            }
+            else if (dist < diff / 10f) // 10% of screen height
+            {
+                // Note is too far to be hit but still close
+                // We do that to prevent the player spamming
             }
             else
             {
-                return;
+                return; // Note is too far from the hit marker so we don't do anything with it
             }
 
+            // Destroy the note
             Destroy(note.GameObject);
             _spawnedNotes.RemoveAll(x => x.LaneId == note.LaneId && x.RefTime == note.RefTime);
         }
 
-        private void SpawnNote(PreloadedNotedata data, float currTime, float fallDuration)
+        private void SpawnNote(PreloadedNotedata data, float noteSpawnTime, float fallDuration)
         {
-            var line = ResourceManager.Instance.Lines[data.Lane];
+            var lane = ResourceManager.Instance.Lines[data.Lane];
 
-            var note = Instantiate(_notePrefab, line.Container);
-            note.transform.position = line.SpawnPos;
-            note.GetComponent<Image>().color = data.Id == 0 ? Color.red : Color.blue;
+            // Spawn note
+            var note = Instantiate(_notePrefab, lane.Container);
+            note.transform.position = lane.SpawnPos;
+            note.GetComponent<Image>().color = data.ColorId switch // Set color depending of lewd path
+            {
+                -1 => Color.gray,
+                0 => Color.red,
+                1 => Color.blue,
+
+                _ => throw new System.NotImplementedException()
+            };
 
             _spawnedNotes.Add(new()
             {
                 GameObject = note,
                 Transform = note.transform,
-                RefTime = currTime,
+                RefTime = noteSpawnTime - fallDuration,
                 LaneId = data.Lane,
 
                 FallDuration = fallDuration,
 
-                NoteRoad = data.Id
+                ColorId = data.ColorId
             });
         }
 
         private void TrySpawningNotes(float currentTime)
         {
-            if (_unspawnedNotes.Count == 0) return;
+            if (_unspawnedNotes.Count == 0) return; // Nothing left to spawn
 
-            var closestUnspawnedNote = _unspawnedNotes.Peek();
+            var nextSpawn = _unspawnedNotes.Peek();
 
-            var fallDuration = 1.25f - _progress[closestUnspawnedNote.Id].Value01;
-            if (currentTime > closestUnspawnedNote.Time - fallDuration)
+            var fallDuration = 1.25f - _progress[nextSpawn.ReferenceValue ?? nextSpawn.ColorId].Value01;
+            if (currentTime > nextSpawn.Time - fallDuration) // Is it time to spawn the note (take in consideration fall duration)
             {
                 _unspawnedNotes.Dequeue();
-                SpawnNote(closestUnspawnedNote, closestUnspawnedNote.Time - fallDuration, fallDuration);
-                TrySpawningNotes(currentTime);
+                SpawnNote(nextSpawn, nextSpawn.Time, fallDuration);
+                TrySpawningNotes(currentTime); // If we spawn a note, we check if there is another one to spawn
             }
         }
     }
@@ -178,20 +219,30 @@ namespace Tizieria.Manager
 
     public class NoteData
     {
+        // Actual gameobject of the note
         public GameObject GameObject;
+
+        // Transform related to the gameobject
         public Transform Transform;
+
+        // Which lane the note is on
         public int LaneId;
+
+        // The time the note was spawned at, to calculate its future position
         public float RefTime;
 
+        // How much time does the note need to reach the hit marker
         public float FallDuration;
 
-        public int NoteRoad;
+        // Which lewd path will this note lead us to
+        public int ColorId;
     }
 
     public class PreloadedNotedata
     {
         public float Time;
         public int Lane;
-        public int Id;
+        public int ColorId;
+        public int? ReferenceValue;
     }
 }

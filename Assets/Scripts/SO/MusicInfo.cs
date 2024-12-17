@@ -7,14 +7,5 @@ namespace Tizieria.SO
     {
         public string Name;
         public int BPM;
-
-        public NoteData[] Notes;
-    }
-
-    [System.Serializable]
-    public class NoteData
-    {
-        public int Line;
-        public float Index;
     }
 }

@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace Tizieria.Manager
 {
+    /// <summary>
+    /// Manage the image displayed on the background of the game
+    /// </summary>
     public class CGManager : MonoBehaviour
     {
         public static CGManager Instance { private set; get; }

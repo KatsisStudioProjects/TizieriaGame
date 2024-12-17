@@ -2,6 +2,9 @@
 
 namespace Tizieria.Manager
 {
+    /// <summary>
+    /// Manage the time of the game
+    /// </summary>
     public class TimeManager : MonoBehaviour
     {
         public static TimeManager Instance { private set; get; }
@@ -14,6 +17,9 @@ namespace Tizieria.Manager
 
         private int _loop = 0;
 
+        /// <summary>
+        /// Time is current music time, multiplied by the length of the song by the amount of loops done
+        /// </summary>
         public float Time => _source.time + (_source.clip.length * _loop);
 
         public float Length => _source.clip.length;
@@ -25,6 +31,7 @@ namespace Tizieria.Manager
 
         private void Update()
         {
+            // If current time is inferior of the one checked last Update, it means the song looped
             _lastTime = _currentTime;
             _currentTime = _source.time;
 

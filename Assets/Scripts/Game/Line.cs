@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace Tizieria.Game
 {
+    /// <summary>
+    /// Store information about a rhythm line
+    /// </summary>
     public class Line : MonoBehaviour
     {
         [SerializeField]
@@ -21,8 +24,14 @@ namespace Tizieria.Game
             _hitMarker.color = Color.black;
         }
 
+        /// <summary>
+        /// Location where the hit marker is
+        /// </summary>
         public Transform Container => _hitMarker.transform;
 
+        /// <summary>
+        /// Location where notes spawn
+        /// </summary>
         public Vector2 SpawnPos => _spawnPos.position;
     }
 }

@@ -3,6 +3,9 @@ using UnityEngine.InputSystem;
 
 namespace Tizieria.Manager
 {
+    /// <summary>
+    /// Manage user inputs
+    /// </summary>
     public class InputManager : MonoBehaviour
     {
         public void OnLine1Click(InputAction.CallbackContext value)
