@@ -161,7 +161,7 @@ namespace Tizieria.Manager
             {
                 // Sample note, we just destroy it
             }
-            else if (dist < diff / 5f) // If we are under 50px of distance, the note is succesfully hit
+            else if (dist < diff / 20f) // If we are under a certain distance, the note is succesfully hit
             {
                 _goodMarkerTimer = .5f;
                 _goodMarker.SetActive(true);
