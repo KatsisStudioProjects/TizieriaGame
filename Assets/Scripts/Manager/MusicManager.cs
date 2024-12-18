@@ -161,8 +161,9 @@ namespace Tizieria.Manager
             {
                 // Sample note, we just destroy it
             }
-            else if (dist < diff / 5f) // If we are under a certain distance, the note is succesfully hit
+            else if (dist < diff / 10f) // If we are under a certain distance, the note is succesfully hit
             {
+                Debug.Log($"GOOD => {dist} < {diff / 10f} ({diff})");
                 _goodMarkerTimer = .5f;
                 _goodMarker.SetActive(true);
 
@@ -170,8 +171,9 @@ namespace Tizieria.Manager
 
                 CGManager.Instance.UpdateSprite(_progress[0].Value01, _progress[1].Value01); // Update lewd CG
             }
-            else if (dist < diff / 10f) // 10% of screen height
+            else if (dist < diff / 5f) // 10% of screen height
             {
+                Debug.Log($"NOPE => {dist} < {diff / 5f} ({diff})");
                 _goodMarkerTimer = -1f;
                 // Note is too far to be hit but still close
                 // We do that to prevent the player spamming
