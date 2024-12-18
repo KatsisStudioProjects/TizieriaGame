@@ -123,6 +123,7 @@ namespace Tizieria.Manager
                 // Set position
                 var lane = ResourceManager.Instance.Lines[note.LaneId];
                 note.Transform.position = Vector2.LerpUnclamped(lane.SpawnPos, lane.Container.position, time);
+                note.Image.color = new Color(note.Image.color.r, note.Image.color.g, note.Image.color.b, Mathf.Lerp(1f, note.TargetAlpha, time));
 
                 if (time > 1f + .1f) // Note if out of screen...
                 {
@@ -185,7 +186,15 @@ namespace Tizieria.Manager
             _spawnedNotes.RemoveAll(x => x.LaneId == note.LaneId && x.RefTime == note.RefTime);
         }
 
-        private void SpawnNote(PreloadedNotedata data, float noteSpawnTime, float fallDuration)
+        /// <summary>
+        /// Instantiate a new note on the given line and set its data
+        /// </summary>
+        /// <param name="data">Class containing data of a note that wasn't spawned yet</param>
+        /// <param name="noteSpawnTime">At what time the note should be spawned</param>
+        /// <param name="fallDuration">Time it'll take for the note to fall to the hit marker</param>
+        /// <param name="progress01">Progress on the current lewd path between 0 and 1</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void SpawnNote(PreloadedNotedata data, float noteSpawnTime, float fallDuration, float progress01)
         {
             var lane = ResourceManager.Instance.Lines[data.Lane];
 
@@ -205,12 +214,15 @@ namespace Tizieria.Manager
             {
                 GameObject = note,
                 Transform = note.transform,
+                Image = note.GetComponent<Image>(),
                 RefTime = noteSpawnTime - fallDuration,
                 LaneId = data.Lane,
 
                 FallDuration = fallDuration,
 
-                ColorId = data.ColorId
+                ColorId = data.ColorId,
+
+                TargetAlpha = 1f - progress01
             });
         }
 
@@ -220,11 +232,12 @@ namespace Tizieria.Manager
 
             var nextSpawn = _unspawnedNotes.Peek();
 
-            var fallDuration = 1.25f - _progress[nextSpawn.ReferenceValue ?? nextSpawn.ColorId].Value01;
+            var val01 = _progress[nextSpawn.ReferenceValue ?? nextSpawn.ColorId].Value01;
+            var fallDuration = 1.25f - val01;
             if (currentTime > nextSpawn.Time - fallDuration) // Is it time to spawn the note (take in consideration fall duration)
             {
                 _unspawnedNotes.Dequeue();
-                SpawnNote(nextSpawn, nextSpawn.Time, fallDuration);
+                SpawnNote(nextSpawn, nextSpawn.Time, fallDuration, val01);
                 TrySpawningNotes(currentTime); // If we spawn a note, we check if there is another one to spawn
             }
         }
@@ -246,6 +259,9 @@ namespace Tizieria.Manager
         // Transform related to the gameobject
         public Transform Transform;
 
+        // Image component associated to the gameobject
+        public Image Image;
+
         // Which lane the note is on
         public int LaneId;
 
@@ -257,6 +273,9 @@ namespace Tizieria.Manager
 
         // Which lewd path will this note lead us to
         public int ColorId;
+
+        // Control alpha to make notes more transparent
+        public float TargetAlpha;
     }
 
     public class PreloadedNotedata
