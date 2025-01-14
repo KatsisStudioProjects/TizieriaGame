@@ -7,5 +7,7 @@ namespace Tizieria.SO
     {
         public string Name;
         public int BPM;
+
+        public int NoteCount;
     }
 }

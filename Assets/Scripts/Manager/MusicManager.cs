@@ -54,7 +54,7 @@ namespace Tizieria.Manager
         {
             // Create all notes that will need to be spawned
             _unspawnedNotes = new Queue<PreloadedNotedata>(
-                Enumerable.Range(0, 50)
+                Enumerable.Range(0, _info.NoteCount)
                 .SelectMany(x =>
                 {
                     var laneId = Random.Range(0, ResourceManager.Instance.Lines.Length);
@@ -248,7 +248,7 @@ namespace Tizieria.Manager
 
                 ColorId = data.ColorId,
 
-                TargetAlpha = 1f - progress01
+                TargetAlpha = 1f - progress01 - 0.5f
             });
         }
 
@@ -261,7 +261,7 @@ namespace Tizieria.Manager
 
             var nextSpawn = _unspawnedNotes.Peek();
 
-            var val01 = _progress[nextSpawn.ReferenceValue ?? nextSpawn.ColorId].Value01;
+            var val01 = _progress[nextSpawn.ReferenceValue ?? nextSpawn.ColorId].Value01 * .75f;
             var fallDuration = 1.25f - val01;
             if (currentTime > nextSpawn.Time - fallDuration) // Is it time to spawn the note (take in consideration fall duration)
             {
