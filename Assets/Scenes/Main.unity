@@ -262,6 +262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 502371885}
+  - component: {fileID: 502371886}
   m_Layer: 5
   m_Name: Container
   m_TagString: Untagged
@@ -290,7 +291,29 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
+--- !u!95 &502371886
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502371884}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: dba92d9e3f8630242a77c2cf824db81a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,6 +516,7 @@ MonoBehaviour:
   _info: {fileID: 11400000, guid: efb62a88ebba57047b6af7becb5f20df, type: 2}
   _notePrefab: {fileID: 689448047484957991, guid: 7fec256a7d8bb264b8c4682be0f253c7, type: 3}
   _goodMarker: {fileID: 1875649685}
+  _disappearAnim: {fileID: 502371886}
 --- !u!114 &619342320
 MonoBehaviour:
   m_ObjectHideFlags: 0

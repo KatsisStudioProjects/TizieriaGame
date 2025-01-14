@@ -22,6 +22,9 @@ namespace Tizieria.Manager
         [SerializeField]
         private GameObject _goodMarker;
 
+        [SerializeField]
+        private Animator _disappearAnim;
+
         /// <summary>
         /// Notes that are left to be spawned
         /// </summary>
@@ -35,6 +38,11 @@ namespace Tizieria.Manager
         private Progress[] _progress;
 
         private float _goodMarkerTimer = -1f;
+
+        /// <summary>
+        /// Did we finish playing
+        /// </summary>
+        private bool _isDone = false;
 
         private void Awake()
         {
@@ -110,6 +118,8 @@ namespace Tizieria.Manager
 
         private void LateUpdate() // We do things on LateUpdate to be sure TimeManager update time stuffs beforehand
         {
+            if (_isDone) return;
+
             // We see if we can spawn a new note
             TrySpawningNotes(TimeManager.Instance.Time);
 
@@ -131,6 +141,12 @@ namespace Tizieria.Manager
                     Destroy(note.GameObject);
                     _spawnedNotes.RemoveAt(i);
                 }
+            }
+
+            if (!_unspawnedNotes.Any() && !_spawnedNotes.Any())
+            {
+                _disappearAnim.SetTrigger("Toggle"); // Trigger end of game anim
+                _isDone = true;
             }
         }
 
@@ -230,7 +246,10 @@ namespace Tizieria.Manager
 
         private void TrySpawningNotes(float currentTime)
         {
-            if (_unspawnedNotes.Count == 0) return; // Nothing left to spawn
+            if (_unspawnedNotes.Count == 0) // Nothing left to spawn
+            {
+                return;
+            }
 
             var nextSpawn = _unspawnedNotes.Peek();
 
