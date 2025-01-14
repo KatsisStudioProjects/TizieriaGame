@@ -45,7 +45,7 @@ namespace Tizieria.Manager
         {
             // Create all notes that will need to be spawned
             _unspawnedNotes = new Queue<PreloadedNotedata>(
-                Enumerable.Range(5, 50)
+                Enumerable.Range(0, 50)
                 .SelectMany(x =>
                 {
                     var laneId = Random.Range(0, ResourceManager.Instance.Lines.Length);
