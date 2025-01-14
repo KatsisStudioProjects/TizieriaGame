@@ -526,9 +526,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d33faaa1fc7a1b44f8224b21e6619287, type: 3}
   - {fileID: 21300000, guid: 960450f5eac388f4689476fd60d01094, type: 3}
   _line2Sprites:
-  - {fileID: 21300000, guid: 1e1dd99ce59d77b48b9b96035ce95b24, type: 3}
-  - {fileID: 21300000, guid: 627b0b22de7172244927c006f482d524, type: 3}
-  - {fileID: 21300000, guid: 3e34f24ac40ca4748a203a776fb49ba3, type: 3}
+  - {fileID: 21300000, guid: 1babd1275819d844193c86d5dcb9b028, type: 3}
+  - {fileID: 21300000, guid: 26c18280a927c2f4e9b4ec49256841e2, type: 3}
+  - {fileID: 21300000, guid: 7386ed1b1c16a3446b8ccbaf977d3a7d, type: 3}
 --- !u!114 &619342322
 MonoBehaviour:
   m_ObjectHideFlags: 0
