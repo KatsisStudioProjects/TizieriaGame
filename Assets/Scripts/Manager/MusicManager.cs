@@ -156,6 +156,7 @@ namespace Tizieria.Manager
         {
             yield return new WaitForSeconds(2f);
             CGManager.Instance.UpdateSprite(_progress[0].Value01, _progress[1].Value01, true);
+            MenuManager.Instance.ToggleGameover(_progress[0].Value01, _progress[1].Value01);
         }
 
         private void OnGUI()
