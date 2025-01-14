@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Tizieria.SO;
 using UnityEngine;
@@ -147,7 +148,14 @@ namespace Tizieria.Manager
             {
                 _disappearAnim.SetTrigger("Toggle"); // Trigger end of game anim
                 _isDone = true;
+                StartCoroutine(ShowGameOver());
             }
+        }
+
+        private IEnumerator ShowGameOver()
+        {
+            yield return new WaitForSeconds(2f);
+            CGManager.Instance.UpdateSprite(_progress[0].Value01, _progress[1].Value01, true);
         }
 
         private void OnGUI()
@@ -185,7 +193,7 @@ namespace Tizieria.Manager
 
                 _progress[note.ColorId].Value++;
 
-                CGManager.Instance.UpdateSprite(_progress[0].Value01, _progress[1].Value01); // Update lewd CG
+                CGManager.Instance.UpdateSprite(_progress[0].Value01, _progress[1].Value01, false); // Update lewd CG
             }
             else if (dist < diff / 5f)
             {
