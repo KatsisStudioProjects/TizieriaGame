@@ -171,7 +171,7 @@ namespace Tizieria.Manager
 
                 CGManager.Instance.UpdateSprite(_progress[0].Value01, _progress[1].Value01); // Update lewd CG
             }
-            else if (dist < diff / 5f) // 10% of screen height
+            else if (dist < diff / 5f)
             {
                 Debug.Log($"NOPE => {dist} < {diff / 5f} ({diff})");
                 _goodMarkerTimer = -1f;
