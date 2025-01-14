@@ -24,11 +24,13 @@ namespace Tizieria.Manager
         private float _startTimer = 3f;
 
         /// <summary>
-        /// Time is current music time, multiplied by the length of the song by the amount of loops done
+        /// Time is current music time, multiplied by the length of the song by the amount of loops done, we also substract the starting timer
         /// </summary>
         public float Time => _source.time + (_source.clip.length * _loop) - _startTimer;
 
         public float Length => _source.clip.length;
+
+        public bool _didStart;
 
         private void Awake()
         {
@@ -37,17 +39,11 @@ namespace Tizieria.Manager
 
         private void Update()
         {
-            // If current time is inferior of the one checked last Update, it means the song looped
-            _lastTime = _currentTime;
-            _currentTime = _source.time;
-
-            if (_lastTime > _currentTime)
-            {
-                _loop++;
-            }
+            if (!_didStart) return;
 
             if (_startTimer > 0f)
             {
+                // Countdown before game start
                 _startTimer -= UnityEngine.Time.deltaTime;
                 if (_startTimer <= 0f)
                 {
@@ -59,6 +55,23 @@ namespace Tizieria.Manager
                     _startTimerText.text = $"{Mathf.CeilToInt(_startTimer)}";
                 }
             }
+            else
+            {
+                // If current time is inferior of the one checked last Update, it means the song looped
+                _lastTime = _currentTime;
+                _currentTime = _source.time;
+
+                if (_lastTime > _currentTime)
+                {
+                    _loop++;
+                }
+            }
+
+        }
+
+        public void StartTimer()
+        {
+            _didStart = true;
         }
     }
 }
