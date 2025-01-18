@@ -767,8 +767,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1babd1275819d844193c86d5dcb9b028, type: 3}
   - {fileID: 21300000, guid: 26c18280a927c2f4e9b4ec49256841e2, type: 3}
   - {fileID: 21300000, guid: 7386ed1b1c16a3446b8ccbaf977d3a7d, type: 3}
-  _victorySprite1: {fileID: 21300000, guid: 960450f5eac388f4689476fd60d01094, type: 3}
-  _victorySprite2: {fileID: 21300000, guid: 7386ed1b1c16a3446b8ccbaf977d3a7d, type: 3}
+  _victorySprite1: {fileID: 21300000, guid: efb88606468e67644a61b19ecb5d8d49, type: 3}
+  _victorySprite2: {fileID: 21300000, guid: f22463f63012deb46842b6b6605c2ac5, type: 3}
 --- !u!114 &619342322
 MonoBehaviour:
   m_ObjectHideFlags: 0
