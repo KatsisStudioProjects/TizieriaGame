@@ -315,11 +315,14 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'How To Play:
 
-    Choose your path between red and blue
+    - Use the ''Left'' and ''Right'' arrow keys
 
-    Only hit
-    the notes of the color you want!
+    - Choose
+    your path between red and blue
 
+    - Only hit the notes of the color you want!
+
+    -
     Do the best score you can to unlock CGs!'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2431d3254254ef643a43ccae48737812, type: 2}
