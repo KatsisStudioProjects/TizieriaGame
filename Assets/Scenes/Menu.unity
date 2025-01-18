@@ -313,10 +313,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Choose your path between red and blue
+  m_text: 'How To Play:
 
-    Only hit the notes of the
-    color you want!
+    Choose your path between red and blue
+
+    Only hit
+    the notes of the color you want!
 
     Do the best score you can to unlock CGs!'
   m_isRightToLeft: 0
@@ -345,8 +347,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 21.22
+  m_fontSizeBase: 21.22
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
