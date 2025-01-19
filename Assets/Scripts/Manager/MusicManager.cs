@@ -162,7 +162,7 @@ namespace Tizieria.Manager
         private void OnGUI()
         {
             // Lewd path debug
-            GUI.TextArea(new Rect(20, 20, 50, 40), string.Join("\n", _progress.Select(x => $"{x.Value} / {x.Max}")));
+            //GUI.TextArea(new Rect(20, 20, 50, 40), string.Join("\n", _progress.Select(x => $"{x.Value} / {x.Max}")));
         }
 
         /// <summary>
