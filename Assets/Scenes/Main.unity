@@ -384,6 +384,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: e6aef022-d6ba-4977-85fb-f040610f70d6
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 077566b1-5c29-4ef8-b1b2-911ed1dcbf69
+    m_ActionName: 'Player/Skip[/Mouse/leftButton,/Keyboard/space,/Keyboard/enter]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1743,8 +1747,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
