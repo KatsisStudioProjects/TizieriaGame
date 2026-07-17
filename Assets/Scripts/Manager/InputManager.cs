@@ -8,6 +8,9 @@ namespace Tizieria.Manager
     /// </summary>
     public class InputManager : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject _startButton;
+
         public void OnLine1Click(InputAction.CallbackContext value)
         {
             if (value.phase == InputActionPhase.Started)
@@ -26,6 +29,15 @@ namespace Tizieria.Manager
                 MusicManager.Instance.TryClickLine(1);
             }
             else if (value.phase == InputActionPhase.Canceled) ResourceManager.Instance.Lines[1].Release();
+        }
+
+        public void OnSpacebar(InputAction.CallbackContext value)
+        {
+            if (value.phase == InputActionPhase.Started)
+            {
+                _startButton.SetActive(false);
+                TimeManager.Instance.StartTimer();
+            }
         }
     }
 }
