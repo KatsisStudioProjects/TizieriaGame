@@ -23,10 +23,13 @@ namespace Tizieria.Manager
 
         private float _startTimer = 3f;
 
+        private float _timerPitch = 1f;
+        public bool StopPitch { set; get; }
+
         /// <summary>
         /// Time is current music time, multiplied by the length of the song by the amount of loops done, we also substract the starting timer
         /// </summary>
-        public float Time => _source.time + (_source.clip.length * _loop) - _startTimer;
+        public float MusicTime => _source.time + (_source.clip.length * _loop) - _startTimer;
 
         public float Length => _source.clip.length;
 
@@ -65,6 +68,12 @@ namespace Tizieria.Manager
                 {
                     _loop++;
                 }
+            }
+
+            if (StopPitch)
+            {
+                _timerPitch = Mathf.Clamp01(_timerPitch - Time.deltaTime * 2f);
+                _source.pitch = _timerPitch;
             }
 
         }

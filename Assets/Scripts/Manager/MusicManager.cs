@@ -123,14 +123,14 @@ namespace Tizieria.Manager
             if (_isDone) return;
 
             // We see if we can spawn a new note
-            TrySpawningNotes(TimeManager.Instance.Time);
+            TrySpawningNotes(TimeManager.Instance.MusicTime);
 
             // We make all notes go soawn
             for (int i = _spawnedNotes.Count - 1; i >= 0; i--)
             {
                 var note = _spawnedNotes[i];
 
-                var time = (TimeManager.Instance.Time - note.RefTime) / note.FallDuration; // Calculate note fall depending on time and fall speed
+                var time = (TimeManager.Instance.MusicTime - note.RefTime) / note.FallDuration; // Calculate note fall depending on time and fall speed
 
                 // Set position
                 var lane = ResourceManager.Instance.Lines[note.LaneId];
@@ -158,6 +158,7 @@ namespace Tizieria.Manager
             yield return new WaitForSeconds(2f);
             CGManager.Instance.UpdateSprite(_progress[0].Value01, _progress[1].Value01, true);
             MenuManager.Instance.ToggleGameover(_progress[0].Value01, _progress[1].Value01);
+            TimeManager.Instance.StopPitch = true;
         }
 
         private void OnGUI()
