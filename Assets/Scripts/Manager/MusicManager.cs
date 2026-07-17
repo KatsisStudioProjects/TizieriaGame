@@ -219,7 +219,8 @@ namespace Tizieria.Manager
             }
 
             // Destroy the note
-            Destroy(note.GameObject);
+            Destroy(note.GameObject, .2f);
+            note.Image.color = new Color(note.Image.color.r, note.Image.color.g, note.Image.color.b, 1f);
             _spawnedNotes.RemoveAll(x => x.LaneId == note.LaneId && x.RefTime == note.RefTime);
         }
 
