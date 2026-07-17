@@ -10,9 +10,15 @@ namespace Tizieria.Game
     {
         [SerializeField]
         private Image _hitMarker;
+        private Color _baseColor;
 
         [SerializeField]
         private Transform _spawnPos;
+
+        private void Awake()
+        {
+            _baseColor = _hitMarker.color;
+        }
 
         public void Click()
         {
@@ -21,7 +27,7 @@ namespace Tizieria.Game
 
         public void Release()
         {
-            _hitMarker.color = Color.black;
+            _hitMarker.color = _baseColor;
         }
 
         /// <summary>
