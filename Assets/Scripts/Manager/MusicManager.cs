@@ -21,7 +21,7 @@ namespace Tizieria.Manager
         private GameObject _notePrefab;
 
         [SerializeField]
-        private GameObject _goodMarker;
+        private GameObject _goodMarker, _greatMarker;
 
         [SerializeField]
         private Animator _disappearAnim;
@@ -113,6 +113,7 @@ namespace Tizieria.Manager
                 if (_goodMarkerTimer <= 0f)
                 {
                     _goodMarker.SetActive(false);
+                    _greatMarker.SetActive(false);
                 }
             }
         }
@@ -188,9 +189,17 @@ namespace Tizieria.Manager
             }
             else if (dist < diff / 10f) // If we are under a certain distance, the note is succesfully hit
             {
-                Debug.Log($"GOOD => {dist} < {diff / 10f} ({diff})");
+                if (dist < diff / 20f)
+                {
+                    Debug.Log($"GOOD => {dist} < {diff / 20f} ({diff})");
+                    _greatMarker.SetActive(true);
+                }
+                else
+                {
+                    Debug.Log($"GOOD => {dist} < {diff / 10f} ({diff})");
+                    _goodMarker.SetActive(true);
+                }
                 _goodMarkerTimer = .5f;
-                _goodMarker.SetActive(true);
 
                 _progress[note.ColorId].Value++;
 
